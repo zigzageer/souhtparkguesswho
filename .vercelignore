@@ -1,0 +1,16 @@
+.git/
+node_modules/
+.cache/
+test-results/
+playwright-report/
+test/
+.env
+.env.*
+scripts/scrape.py
+scripts/requirements.txt
+scripts/browser-deps.sh
+scripts/redis-test-deps.sh
+scripts/serve-redis-test.mjs
+scripts/webkit-launch.sh
+playwright.config.js
+*.log

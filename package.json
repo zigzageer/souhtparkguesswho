@@ -1,0 +1,17 @@
+{
+  "name": "south-park-guess-who",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A lightweight real-time South Park Guess Who game for two players.",
+  "engines": { "node": "24.x" },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "build": "node scripts/build.mjs",
+    "test": "node --test test/*.test.js",
+    "test:browser": "playwright test",
+    "scrape": "python3 scripts/scrape.py"
+  },
+  "devDependencies": { "@playwright/test": "1.58.2" }
+}

@@ -1,0 +1,55 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { once } from 'node:events';
+import { readFile } from 'node:fs/promises';
+import { createServer } from 'node:http';
+import { redisFixture } from './redis-fixture.js';
+import { RedisRooms } from '../lib/redis-rooms.js';
+import { createServerlessApi } from '../lib/serverless-api.js';
+const catalog = JSON.parse(await readFile(new URL('../public/data/characters.json', import.meta.url)));
+
+test('stateless workers share Redis rooms, prevent concurrent joins and preserve private state', async t => {
+  const fixture = await redisFixture(); t.after(() => fixture.close());
+  const a = new RedisRooms(catalog.characters, fixture), b = new RedisRooms(catalog.characters, fixture);
+  const host = await a.create({ name: 'Host' }), code = host.state.code;
+  const joins = await Promise.allSettled([a.join(code, { name: 'Buddy' }), b.join(code, { name: 'Third' })]);
+  assert.equal(joins.filter(j => j.status === 'fulfilled').length, 1);
+  const buddy = joins.find(j => j.status === 'fulfilled').value;
+  assert.equal(joins.find(j => j.status === 'rejected').reason.status, 409);
+  await Promise.all([a.action(code, host.token, { type: 'ready' }), b.action(code, buddy.token, { type: 'ready' })]);
+  const view = await a.view(code, host.token); assert.equal(view.status, 'playing');
+  assert.ok(!('secret' in view.opponent)); assert.ok(!('token' in view.you));
+  const id = view.deck[0]; await a.action(code, host.token, { type: 'eliminate', id, excluded: true });
+  assert.deepEqual((await b.view(code, host.token)).you.eliminated, [id]);
+  assert.deepEqual((await b.view(code, buddy.token)).you.eliminated, []);
+  const hostId = host.state.you.id;
+  await a.action(code, host.token, { type: 'ask', text: 'Wearing a hat?' });
+  await a.action(code, host.token, { type: 'guess', id: buddy.state.you.secret });
+  assert.equal((await b.view(code, buddy.token)).result.winner, hostId);
+  await Promise.all([a.action(code, host.token, { type: 'rematch' }), b.action(code, buddy.token, { type: 'rematch' })]);
+  const next = await a.view(code, host.token); assert.equal(next.round, 2); assert.equal(next.status, 'lobby'); assert.deepEqual(next.you.eliminated, []);
+  await assert.rejects(a.view(code, 'bad-token'), { status: 401 });
+});
+
+test('serverless HTTP rewrites, cache validators, durable presence and concurrent winning guesses', async t => {
+  const fixture = await redisFixture(); t.after(() => fixture.close());
+  const store = new RedisRooms(catalog.characters, fixture);
+  const server = createServer(createServerlessApi(catalog, { store })); server.listen(0, '127.0.0.1'); await once(server, 'listening');
+  t.after(() => { server.closeAllConnections(); server.close(); });
+  const base = `http://127.0.0.1:${server.address().port}`;
+  const post = async (path, body, token) => { const r = await fetch(base + path, { method: 'POST', headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) }, body: JSON.stringify(body) }); return { status: r.status, data: await r.json() }; };
+  assert.equal((await (await fetch(base + '/api/index?route=health')).json()).storage, 'redis');
+  const publicData = await (await fetch(base + '/api/index?route=catalog')).json(); assert.equal(publicData.transport, 'poll');
+  const host = (await post('/api/index?route=rooms', { name: 'Host' })).data;
+  const path = '/api/rooms/' + host.state.code;
+  const buddy = (await post(path + '/join', { name: 'Buddy' })).data;
+  await fetch(base + path, { headers: { Authorization: `Bearer ${buddy.token}` } });
+  const first = await fetch(base + path, { headers: { Authorization: `Bearer ${host.token}` } });
+  assert.equal((await first.json()).opponent.online, true);
+  assert.equal((await fetch(base + path, { headers: { Authorization: `Bearer ${host.token}`, 'If-None-Match': first.headers.get('etag') } })).status, 304);
+  await post(path + '/actions', { type: 'ready' }, host.token); await post(path + '/actions', { type: 'ready' }, buddy.token);
+  const results = await Promise.all([post(path + '/actions', { type: 'guess', id: buddy.state.you.secret }, host.token), post(path + '/actions', { type: 'guess', id: host.state.you.secret }, buddy.token)]);
+  assert.deepEqual(results.map(r => r.status).sort(), [200, 400]);
+  assert.equal((await post(path + '/actions', { type: 'restore' }, 'bad-token')).status, 401);
+  assert.equal((await post('/api/rooms', null)).status, 400);
+});

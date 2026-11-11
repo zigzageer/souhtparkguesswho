@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f6f3e9">
+  <meta name="description" content="A tiny mountain town. Thousands of suspects. Play South Park Guess Who with a friend in a private, real-time 1v1 room.">
+  <title>South Park · Guess Who?</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="South Park Guess Who home"><span class="brand-mark">SP<span>?</span></span><span>SOUTH PARK<small>GUESS WHO?</small></span></a>
+    <div class="header-right"><span class="online-tag"><i></i> FRIENDS, NOT BOTS</span><button class="text-button" id="rules">How to play <span class="circle-help">?</span></button></div>
+  </header>
+
+  <main>
+    <section id="intro" class="intro">
+      <div><span class="eyebrow"><span class="tiny-star">✦</span> WELCOME TO THE NEIGHBORHOOD</span><h1>A small town.<br>A lot of <span>suspects.</span></h1><p>You know the faces. But do you know your friend’s?<br> Ask questions, rule them out, and make your guess.</p></div>
+      <div class="hero-art" aria-hidden="true"><div class="mountains"></div><div class="hero-sign"><small>WELCOME TO</small><strong>SOUTH<br>PARK</strong><span>WHO’S HIDING HERE?</span></div><div class="pine pine-one">♠</div><div class="pine pine-two">♠</div><span class="snow snow-one">✦</span><span class="snow snow-two">+</span><span class="hero-stamp">1 vs 1<br><b>NO DOWNLOADS</b></span></div>
+    </section>
+
+    <div id="connection" class="connection" role="status" hidden>Reconnecting… Your board is saved. Game actions will resume when connected.</div>
+    <section class="play-layout">
+      <aside class="sidebar">
+        <section id="home-panel" class="paper home-panel">
+          <span class="eyebrow">BRING YOUR OWN BUDDY</span><h2>Let’s play.</h2><p class="muted">One room. Two players. Zero sign-ups.</p>
+          <form id="create-form">
+            <label for="player-name">YOUR NAME</label><input id="player-name" name="name" placeholder="e.g. Professor Chaos" maxlength="24" value="" required autocomplete="nickname">
+            <label for="deck-mode">THE LINEUP</label><select id="deck-mode" name="mode"><option value="classic">The usual suspects · 24</option><option value="random">Deep cuts · 48 random</option><option value="all">The whole town · all characters</option></select>
+            <button class="button red full" type="submit" id="create-button">Create a room <span>→</span></button>
+          </form>
+          <div class="divider"><span>ALREADY GOT A CODE?</span></div>
+          <form id="join-form" class="join-form"><label class="sr-only" for="room-code">Room code</label><input id="room-code" placeholder="ROOM CODE" maxlength="6" autocapitalize="characters" autocomplete="off" spellcheck="false" pattern="[A-Za-z2-9]{6}" required><button class="button dark" type="submit">Join <span>→</span></button></form>
+          <p class="small-note">Works best with a friend on a call.</p>
+        </section>
+
+        <section id="room-panel" class="paper room-panel" hidden>
+          <div class="split"><span class="eyebrow">YOUR PRIVATE ROOM</span><button class="text-button small" id="leave">Leave</button></div>
+          <button class="room-code" id="copy-code" title="Copy invitation link"><span id="code-display"></span><small>Copy invite →</small></button>
+          <div class="players"><div><i class="dot green"></i><span id="you-name"></span><small>YOU</small></div><div><i id="opponent-dot" class="dot"></i><span id="opponent-name">Waiting for a friend…</span><small id="opponent-status"></small></div></div>
+          <p id="room-status" class="room-status" role="status"></p>
+          <div class="secret-box"><div class="secret-image" id="secret-image"></div><div><span class="eyebrow">YOUR SECRET CHARACTER</span><h3 id="secret-name"></h3><button class="text-button small" id="change-character">Change character ↻</button></div></div>
+          <button class="button red full" id="ready">I’m ready <span>→</span></button>
+          <p id="ready-note" class="small-note">Keep your character a secret.</p>
+        </section>
+
+        <section id="questions-panel" class="paper questions-panel" hidden>
+          <div class="split"><h2>The interrogation</h2><span class="question-mark">?</span></div><p class="muted">Ask a yes-or-no question. Guess whenever.</p>
+          <div id="question-log" class="question-log" aria-live="polite"></div>
+          <form id="ask-form"><label class="sr-only" for="question-text">Your question</label><input id="question-text" maxlength="180" placeholder="Do they wear a hat?" required autocomplete="off"><button class="button dark full" id="ask-button">Ask your buddy <span>↑</span></button></form>
+        </section>
+
+        <div class="how-card" id="quick-rules"><span class="eyebrow">THE SHORT VERSION</span><ol><li><b>01</b><span>Share your code with a friend.</span></li><li><b>02</b><span>Ask. Eliminate. Narrow it down.</span></li><li><b>03</b><span>Know who? Make your guess.</span></li></ol><span class="small-note">A wrong guess loses the round. No pressure.</span></div>
+      </aside>
+
+      <section class="board-section" aria-labelledby="board-title">
+        <div class="board-heading"><div><span class="eyebrow" id="board-eyebrow">SMALL TOWN. BIG PERSONALITIES.</span><h2 id="board-title">The usual suspects<span class="count-tag" id="board-count">24</span></h2></div><span class="board-label" id="board-label">THE PREVIEW LINEUP</span></div>
+        <div class="board-controls"><div class="search-box"><span aria-hidden="true">⌕</span><label class="sr-only" for="search">Search characters</label><input type="search" id="search" placeholder="Find a familiar face…" autocomplete="off"></div><button class="tool-button" id="remaining-filter" aria-pressed="false" disabled>Remaining only</button><button class="tool-button" id="undo" disabled aria-label="Undo last elimination">↶ <span>Undo</span></button><button class="tool-button" id="restore" disabled>Reset</button></div>
+        <div id="play-hint" class="play-hint"><span class="dot green"></span> Pick a room to get started. Your friend’s character is a mystery.</div>
+        <div id="board" class="board" aria-live="polite"><p class="loading">Rounding up the usual suspects…</p></div>
+        <div class="pagination" id="pagination" hidden><button class="tool-button" id="previous-page">← Previous</button><span id="page-label"></span><button class="tool-button" id="next-page">Next →</button></div>
+        <div class="board-bottom"><span id="remaining-count">24 faces. One very good poker face.</span><span>TAP A CARD TO CROSS IT OUT <span aria-hidden="true">✕</span></span></div>
+        <div id="guess-bar" class="guess-bar" hidden><div><b>Got a hunch?</b><small>One guess. Make it count.</small></div><button class="button red" id="guess-mode">Make a guess <span>→</span></button></div>
+      </section>
+    </section>
+    <footer><span class="footer-brand">SOUTH PARK <b>GUESS WHO?</b></span><span>Made for friends. Respect the authoritah.</span><button id="sources" class="text-button">Characters & credits →</button></footer>
+  </main>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <dialog id="modal" aria-labelledby="modal-title"><div class="modal-top"><span class="eyebrow">SOUTH PARK · GUESS WHO?</span><button class="icon-button" id="close-modal" aria-label="Close dialog">✕</button></div><div id="modal-content"></div></dialog>
+</body>
+</html>
