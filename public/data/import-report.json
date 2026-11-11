@@ -3,7 +3,7 @@
   "category": "Category:Characters",
   "importedAt": "2026-11-11T04:04:59.277425+00:00",
   "count": 2658,
-  "portraits": 1009,
+  "portraits": 1010,
   "paginationComplete": true,
   "categoryResponses": 182,
   "categoriesVisited": [
@@ -739,7 +739,6 @@
     "79698",
     "32406",
     "42314",
-    "9309",
     "74107",
     "94400",
     "4662",
@@ -1877,5 +1876,12 @@
     "southpark.wiki.gg"
   ],
   "portraitArchive": "ChaconMoon/API-South-Park (see README for pinned revision)",
-  "attribution": "Character data: South Park Archives contributors (CC BY-SA). Characters and artwork belong to their respective owners. Unofficial fan project."
+  "attribution": "Character data: South Park Archives contributors (CC BY-SA). Characters and artwork belong to their respective owners. Unofficial fan project.",
+  "supplementalPortraits": [
+    {
+      "id": "9309",
+      "name": "ManBearPig (Character)",
+      "source": "https://raw.githubusercontent.com/kostalexis89/South-Park-Game-JvScrpt-HelpEricClearTheStreets/d66314352e38631676f1bf3ffacee61a3045e5be/assets/obstacle/manbearpig.png"
+    }
+  ]
 }

@@ -1,6 +1,6 @@
 import { randomBytes, randomInt, randomUUID } from 'node:crypto';
 
-const CLASSIC = ['Eric Cartman', 'Stan Marsh', 'Kyle Broflovski', 'Kenny McCormick', 'Butters Stotch', 'Wendy Testaburger', 'Randy Marsh', 'Tweek Tweak', 'Craig Tucker', 'Clyde Donovan', 'Tolkien Black', 'Jimmy Valmer', 'Timmy Burch', 'Bebe Stevens', 'Heidi Turner', 'Mr. Mackey', 'Herbert Garrison', 'Jerome "Chef" McElroy', 'Sharon Marsh', 'Sheila Broflovski', 'Gerald Broflovski', 'Liane Cartman', 'Ike Broflovski', 'Towelie (Character)'];
+const CLASSIC = ['Eric Cartman', 'Stan Marsh', 'Kyle Broflovski', 'Kenny McCormick', 'Butters Stotch', 'Wendy Testaburger', 'Randy Marsh', 'Tweek Tweak', 'Craig Tucker', 'Clyde Donovan', 'Tolkien Black', 'Jimmy Valmer', 'Timmy Burch', 'Bebe Stevens', 'Heidi Turner', 'Mr. Mackey', 'Herbert Garrison', 'Jerome "Chef" McElroy', 'Sharon Marsh', 'Sheila Broflovski', 'Gerald Broflovski', 'Liane Cartman', 'Ike Broflovski', 'Towelie (Character)', 'ManBearPig (Character)'];
 export class GameError extends Error {
   constructor(message, status = 400) { super(message); this.status = status; }
 }
@@ -23,7 +23,7 @@ export class Games {
   constructor(characters) {
     this.characters = characters;
     this.byId = new Map(characters.map(c => [c.id, c]));
-    this.classic = CLASSIC.map(name => characters.find(c => c.name === name)).filter(Boolean).slice(0, 24).map(c => c.id);
+    this.classic = CLASSIC.map(name => characters.find(c => c.name === name)).filter(Boolean).map(c => c.id);
     requireThat(this.classic.length >= 12, 'Character catalogue is incomplete.', 500);
     this.rooms = new Map();
   }

@@ -195,7 +195,17 @@ def main():
             for n, _ in enumerate(pool.map(download, characters), 1):
                 if n % 100 == 0:
                     print(f'Processed {n}/{len(characters)} portraits', flush=True)
+    # Preserve explicitly sourced supplemental portraits when the wiki image
+    # host is unavailable. All overrides reference bundled, tracked assets.
+    overrides_path = output / 'character-overrides.json'
+    overrides = json.loads(overrides_path.read_text()) if overrides_path.exists() else {}
     for c in characters:
+        override = overrides.get(c['id'])
+        if override:
+            image_path = (ROOT / 'public' / override['image'].lstrip('/')).resolve()
+            if not image_path.is_relative_to((ROOT / 'public' / 'portraits').resolve()) or not image_path.is_file():
+                raise RuntimeError('Missing or invalid supplemental portrait: ' + c['id'])
+            c.update(override)
         del c['_file']
     characters.sort(key=lambda c: c['name'].casefold())
     metadata = {
@@ -208,6 +218,7 @@ def main():
         'downloadFailures': failures,
         'blockedImageHosts': sorted(blocked_hosts) if not args.no_images else [],
         'portraitArchive': 'ChaconMoon/API-South-Park (see README for pinned revision)' if args.portrait_dir else None,
+        'supplementalPortraits': [{'id': c['id'], 'name': c['name'], 'source': c['imageSource']} for c in characters if c.get('imageSource')],
         'attribution': 'Character data: South Park Archives contributors (CC BY-SA). Characters and artwork belong to their respective owners. Unofficial fan project.',
     }
     payload = json.dumps({'meta': metadata, 'characters': characters}, ensure_ascii=False, separators=(',', ':'))

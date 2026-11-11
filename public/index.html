@@ -29,7 +29,7 @@
           <span class="eyebrow">BRING YOUR OWN BUDDY</span><h2>Let’s play.</h2><p class="muted">One room. Two players. Zero sign-ups.</p>
           <form id="create-form">
             <label for="player-name">YOUR NAME</label><input id="player-name" name="name" placeholder="e.g. Professor Chaos" maxlength="24" value="" required autocomplete="nickname">
-            <label for="deck-mode">THE LINEUP</label><select id="deck-mode" name="mode"><option value="classic">The usual suspects · 24</option><option value="random">Deep cuts · 48 random</option><option value="all">The whole town · all characters</option></select>
+            <label for="deck-mode">THE LINEUP</label><select id="deck-mode" name="mode"><option value="classic">The usual suspects · 25</option><option value="random">Deep cuts · 48 random</option><option value="all">The whole town · all characters</option></select>
             <button class="button red full" type="submit" id="create-button">Create a room <span>→</span></button>
           </form>
           <div class="divider"><span>ALREADY GOT A CODE?</span></div>
@@ -57,12 +57,12 @@
       </aside>
 
       <section class="board-section" aria-labelledby="board-title">
-        <div class="board-heading"><div><span class="eyebrow" id="board-eyebrow">SMALL TOWN. BIG PERSONALITIES.</span><h2 id="board-title">The usual suspects<span class="count-tag" id="board-count">24</span></h2></div><span class="board-label" id="board-label">THE PREVIEW LINEUP</span></div>
+        <div class="board-heading"><div><span class="eyebrow" id="board-eyebrow">SMALL TOWN. BIG PERSONALITIES.</span><h2 id="board-title">The usual suspects<span class="count-tag" id="board-count">25</span></h2></div><span class="board-label" id="board-label">THE PREVIEW LINEUP</span></div>
         <div class="board-controls"><div class="search-box"><span aria-hidden="true">⌕</span><label class="sr-only" for="search">Search characters</label><input type="search" id="search" placeholder="Find a familiar face…" autocomplete="off"></div><button class="tool-button" id="remaining-filter" aria-pressed="false" disabled>Remaining only</button><button class="tool-button" id="undo" disabled aria-label="Undo last elimination">↶ <span>Undo</span></button><button class="tool-button" id="restore" disabled>Reset</button></div>
         <div id="play-hint" class="play-hint"><span class="dot green"></span> Pick a room to get started. Your friend’s character is a mystery.</div>
         <div id="board" class="board" aria-live="polite"><p class="loading">Rounding up the usual suspects…</p></div>
         <div class="pagination" id="pagination" hidden><button class="tool-button" id="previous-page">← Previous</button><span id="page-label"></span><button class="tool-button" id="next-page">Next →</button></div>
-        <div class="board-bottom"><span id="remaining-count">24 faces. One very good poker face.</span><span>TAP A CARD TO CROSS IT OUT <span aria-hidden="true">✕</span></span></div>
+        <div class="board-bottom"><span id="remaining-count">25 faces. One very good poker face.</span><span>TAP A CARD TO CROSS IT OUT <span aria-hidden="true">✕</span></span></div>
         <div id="guess-bar" class="guess-bar" hidden><div><b>Got a hunch?</b><small>One guess. Make it count.</small></div><button class="button red" id="guess-mode">Make a guess <span>→</span></button></div>
       </section>
     </section>

@@ -5,7 +5,7 @@ test('two iPhone X-sized clients: invite, ready, questions, private eliminations
   const aContext = await browser.newContext(mobile), bContext = await browser.newContext(mobile);
   const a = await aContext.newPage(), b = await bContext.newPage();
   const errors = []; for (const p of [a, b]) p.on('pageerror', e => errors.push(e.message));
-  await a.goto('/'); await expect(a.locator('.character')).toHaveCount(24);
+  await a.goto('/'); await expect(a.locator('.character')).toHaveCount(25);
   await a.locator('#player-name').fill('Stan'); await a.locator('#create-button').click();
   await expect(a.locator('#room-panel')).toBeVisible();
   const code = await a.locator('#code-display').textContent();
@@ -13,6 +13,9 @@ test('two iPhone X-sized clients: invite, ready, questions, private eliminations
   await b.locator('#player-name').fill('Kyle'); await b.locator('#join-form button').click();
   await expect(a.locator('#opponent-name')).toHaveText('Kyle');
   await expect(b.locator('#opponent-name')).toHaveText('Stan');
+  await b.locator('#change-character').click();
+  await b.getByRole('button', { name: 'Choose ManBearPig (Character) as your secret', exact: true }).click();
+  await expect(b.locator('#secret-name')).toHaveText('ManBearPig (Character)');
   const target = await b.locator('#secret-name').textContent();
   await a.locator('#ready').click(); await b.locator('#ready').click();
   await expect(a.locator('#guess-mode')).toBeVisible();
@@ -44,9 +47,9 @@ test('two iPhone X-sized clients: invite, ready, questions, private eliminations
 
 test('desktop landing, real portraits, rules, and complete catalog pagination', async ({ page }) => {
   const catalog = await (await page.request.get('/api/catalog')).json();
-  await page.goto('/'); await expect(page.locator('.character')).toHaveCount(24);
+  await page.goto('/'); await expect(page.locator('.character')).toHaveCount(25);
   await expect(page.locator('h1')).toContainText('A small town.');
-  await expect(page.locator('.character img')).toHaveCount(24);
+  await expect(page.locator('.character img')).toHaveCount(25);
   await expect.poll(() => page.locator('.character img').evaluateAll(images => images.every(img => img.complete && img.naturalWidth > 0))).toBe(true);
   await page.locator('#rules').click(); await expect(page.locator('#modal-title')).toContainText('friendly suspicion'); await page.locator('#close-modal').click();
   await page.locator('#player-name').fill('Deep cut'); await page.locator('#deck-mode').selectOption('all'); await page.locator('#create-button').click();

@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { Games } from '../game.js';
 
-const names = ['Eric Cartman', 'Stan Marsh', 'Kyle Broflovski', 'Kenny McCormick', 'Butters Stotch', 'Wendy Testaburger', 'Randy Marsh', 'Tweek Tweak', 'Craig Tucker', 'Clyde Donovan', 'Tolkien Black', 'Jimmy Valmer', 'Timmy Burch', 'Ike Broflovski', 'Bebe Stevens', 'Heidi Turner', 'Sharon Marsh', 'Sheila Broflovski', 'Gerald Broflovski', 'Liane Cartman', 'Mr. Mackey', 'Herbert Garrison', 'Jerome "Chef" McElroy', 'Towelie (Character)'];
+const names = ['Eric Cartman', 'Stan Marsh', 'Kyle Broflovski', 'Kenny McCormick', 'Butters Stotch', 'Wendy Testaburger', 'Randy Marsh', 'Tweek Tweak', 'Craig Tucker', 'Clyde Donovan', 'Tolkien Black', 'Jimmy Valmer', 'Timmy Burch', 'Ike Broflovski', 'Bebe Stevens', 'Heidi Turner', 'Sharon Marsh', 'Sheila Broflovski', 'Gerald Broflovski', 'Liane Cartman', 'Mr. Mackey', 'Herbert Garrison', 'Jerome "Chef" McElroy', 'Towelie (Character)', 'ManBearPig (Character)'];
 const characters = names.map((name, index) => ({ id: String(index), name, image: '/portrait.webp' }));
 function pair(mode = 'classic') {
   const games = new Games(characters);
@@ -16,7 +16,7 @@ function readyAll(games, room, first, second) {
 test('private room codes, two-player capacity, authentication and hidden identities', () => {
   const { games, room, first, second } = pair();
   assert.match(room.code, /^[A-HJ-NP-Z2-9]{6}$/);
-  assert.equal(room.deck.length, 24);
+  assert.equal(room.deck.length, 25);
   assert.throws(() => games.join(room.code, { name: 'Third' }), /two players/);
   assert.throws(() => games.authenticate(room, 'wrong'), /session/);
   const view = games.view(room, first);
@@ -74,7 +74,7 @@ test('wrong guess loses; rematch requires both players and clears all round stat
 test('all-character mode includes every imported entry; random mode uses portraits', () => {
   const { games, room } = pair('all'); assert.equal(room.deck.length, characters.length);
   assert.deepEqual(new Set(room.deck), new Set(characters.map(c => c.id)));
-  assert.equal(new Set(games.deck('random')).size, 24);
+  assert.equal(new Set(games.deck('random')).size, 25);
   assert.throws(() => games.create({ name: 'A', mode: '__proto__' }), /valid/);
 });
 test('invalid actions and expired room cleanup', () => {

@@ -35,13 +35,13 @@ Production and Preview use separate Redis key prefixes. Rooms expire after two h
 4. Tap cards to cross them out; tap again to restore. Undo, reset, search, and remaining-only filtering help narrow the field. Eliminations are private and survive a page reload in the same browser tab.
 5. Make a final guess at any time, including with a question pending. A correct guess wins; a wrong guess loses immediately. Both players can request a rematch.
 
-The familiar lineup has 24 characters. Deep cuts chooses 48 characters with portraits. The whole-town mode includes the complete imported index, displayed 48 cards at a time with search.
+The familiar lineup has 25 characters. Deep cuts chooses 48 characters with portraits. The whole-town mode includes the complete imported index, displayed 48 cards at a time with search.
 
 ## Character import and coverage
 
-The bundled import contains **2,658 character pages**, discovered by exhausting MediaWiki pagination through **165 character categories**, and **1,009 compressed local portraits**. Includes background characters, celebrities, animals, groups, and alternate identities. This exhausts the indexed categories at import time, but cannot guarantee every on-screen appearance or a separate entry for each individual in a group article. The UI and [machine-readable report](public/data/import-report.json) expose the actual coverage and missing portraits.
+The bundled import contains **2,658 character pages**, discovered by exhausting MediaWiki pagination through **165 character categories**, and **1,010 compressed local portraits**. Includes background characters, celebrities, animals, groups, and alternate identities. This exhausts the indexed categories at import time, but cannot guarantee every on-screen appearance or a separate entry for each individual in a group article. The UI and [machine-readable report](public/data/import-report.json) expose the actual coverage and missing portraits.
 
-The wiki's image host refused automated image downloads from this environment. Available portraits were matched by normalized filenames against the public [ChaconMoon/API-South-Park archive](https://github.com/ChaconMoon/API-South-Park/tree/9d2475db39f8f417f24d582e4c6da50f42853a90/img). Other entries keep name/initial placeholders rather than invented images. All 24 classic characters have portraits.
+The wiki's image host refused automated image downloads from this environment. Available portraits were matched by normalized filenames against the public [ChaconMoon/API-South-Park archive](https://github.com/ChaconMoon/API-South-Park/tree/9d2475db39f8f417f24d582e4c6da50f42853a90/img). Other entries keep name/initial placeholders rather than invented images. All 25 classic characters have portraits.
 
 To refresh from a local PC or cloud machine with access to the public wiki:
 

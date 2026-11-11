@@ -6,7 +6,7 @@ const catalog = JSON.parse(await readFile(new URL('data/characters.json', root),
 assert.equal(catalog.characters.length, catalog.meta.count);
 assert.equal(new Set(catalog.characters.map(c => c.id)).size, catalog.meta.count);
 const games = new Games(catalog.characters);
-assert.equal(games.classic.length, 24);
+assert.equal(games.classic.length, 25);
 await Promise.all(catalog.characters.filter(c => c.image).map(c => access(new URL(c.image.slice(1), root))));
 for (const path of ['index.html', 'app.js', 'style.css']) await access(new URL(path, root));
 console.log(`Validated ${catalog.meta.count} characters and all local portrait assets. Static files and serverless API are ready.`);
